@@ -1,7 +1,7 @@
 import pygame as pg
 from support import import_csv_layout, import_cut_graphics
 from settings import tile_size
-from tiles import AnimatedTile, Tile, StaticTile, Crate, Coin
+from tiles import AnimatedTile, Tile, StaticTile, Crate, Coin, Palm
 
 class Level:
     def __init__(self, level_data, surface):
@@ -24,6 +24,14 @@ class Level:
         # Coins
         coin_layout = import_csv_layout(level_data['coins'])
         self.coin_sprites = self.create_tile_group(coin_layout, 'coins')
+
+        # Forgroung plams
+        fg_palm_layout = import_csv_layout(level_data['fg palms'])
+        self.fg_palm_sprites = self.create_tile_group(fg_palm_layout, 'fg palms')
+
+        # Backgroung plams
+        bg_palm_layout = import_csv_layout(level_data['bg palms'])
+        self.bg_palm_sprites = self.create_tile_group(bg_palm_layout, 'bg palms')
 
     def create_tile_group(self, layout, type):
         sprite_groupe = pg.sprite.Group()
@@ -48,28 +56,41 @@ class Level:
                         sprite = Crate(tile_size, x, y)
                     
                     if type == 'coins':
-                        if val == '0':
-                            sprite = Coin(tile_size, x, y, '../graphics/coins/gold')
-                        else:
-                            sprite = Coin(tile_size, x, y, '../graphics/coins/silver')
+                        if val == '0': sprite = Coin(tile_size, x, y, '../graphics/coins/gold')
+                        elif val == '1': sprite = Coin(tile_size, x, y, '../graphics/coins/silver')
+
+                    if type == 'fg palms':
+                        if val == '0': sprite = Palm(tile_size, x, y, '../graphics/terrain/palm_small', 38)
+                        if val == '1': sprite = Palm(tile_size, x, y, '../graphics/terrain/palm_large', 64)
+                    
+                    if type == 'bg palms':
+                         sprite = Palm(tile_size, x, y, '../graphics/terrain/palm_bg', 64)
 
                     sprite_groupe.add(sprite)
 
         return sprite_groupe
 
     def run(self):
+        # Background palms
+        self.bg_palm_sprites.update(self.world_shift)
+        self.bg_palm_sprites.draw(self.display_surface)        
+
+        # Forground palms
+        self.fg_palm_sprites.update(self.world_shift)
+        self.fg_palm_sprites.draw(self.display_surface)
+
         # Terrain
         self.terrain_sprites.update(self.world_shift)
         self.terrain_sprites.draw(self.display_surface)
-
-        # Grass
-        self.grass_sprites.update(self.world_shift)
-        self.grass_sprites.draw(self.display_surface)
 
         # Crates
         self.crate_sprites.update(self.world_shift)
         self.crate_sprites.draw(self.display_surface)
 
+        # Grass
+        self.grass_sprites.update(self.world_shift)
+        self.grass_sprites.draw(self.display_surface)
+
         # Coins
         self.coin_sprites.update(self.world_shift)
-        self.coin_sprites.draw(self.display_surface)
+        self.coin_sprites.draw(self.display_surface)  
