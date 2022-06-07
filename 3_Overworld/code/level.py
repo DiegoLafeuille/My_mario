@@ -2,7 +2,7 @@ import pygame
 from particles import ParticleEffect
 from support import import_csv_layout, import_cut_graphics
 from settings import tile_size, screen_height, screen_width
-from tiles import AnimatedTile, Tile, StaticTile, Crate, Coin, Palm
+from tiles import Tile, StaticTile, Crate, Coin, Palm
 from enemy import Enemy
 from decoration import Clouds, Sky, Water
 from player import Player
@@ -74,6 +74,14 @@ class Level:
             self.create_overworld(self.current_level, self.new_max_level)
         elif keys[pygame.K_ESCAPE]:
             self.create_overworld(self.current_level, 0)
+
+    def check_death(self):
+        if self.player.sprite.rect.top > screen_height:
+            self.create_overworld(self.current_level, 0)
+    
+    def check_win(self):
+        if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):
+            self.create_overworld(self.current_level, self.new_max_level)
 
     def create_tile_group(self, layout, type):
         sprite_groupe = pygame.sprite.Group()
@@ -219,6 +227,8 @@ class Level:
     def run(self):
         # Level input
         self.input()
+        self.check_death()
+        self.check_win()
 
         # Decoration
         self.sky.draw(self.display_surface)
