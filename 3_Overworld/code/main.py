@@ -1,11 +1,11 @@
 import pygame, sys
-from settings import screen_width, screen_height
+from settings import *
 from overworld import Overworld
 from level import Level
 
 class Game:
 	def __init__(self):
-		self.max_level = 3
+		self.max_level = 1
 		self.overworld = Overworld(1, self.max_level, screen, self.create_level)
 		self.status = 'overworld'
 
