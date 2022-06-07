@@ -2,10 +2,10 @@
 
 ## Important
 - Adjust collision rectangles size
+    -> https://stackoverflow.com/questions/28805271/pygame-rect-collision-smaller-than-image
     - Player (sword should be able to clip)
     - Crates
     - Palm trees
-    -> https://stackoverflow.com/questions/28805271/pygame-rect-collision-smaller-than-image
 - Correct the occasional clipping through terrain
 - Jump on key-down
 - Variable jump height
